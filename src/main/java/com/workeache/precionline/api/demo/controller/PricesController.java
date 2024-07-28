@@ -4,13 +4,13 @@ import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
 import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/prices")
@@ -25,8 +25,15 @@ public class PricesController {
     @GetMapping("/actual")
     public ResponseEntity<?> getActualPrices()
     {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin","*");
+
         DataApiRee dataApiRee =  dataApiReeService.getActualDayPrices();
-        return ResponseEntity.ok(dataApiRee.getData());
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(dataApiRee.getData());
 
     }
 
@@ -36,11 +43,32 @@ public class PricesController {
         return ResponseEntity.ok(dataApiRee.getData());
     }
 
-    @GetMapping("/query/{date}")
-    public ResponseEntity<?> getPricesByDate(@PathVariable LocalDate localDate){
+    @GetMapping("/query")
+    public ResponseEntity<?> getPricesByDate(@RequestParam String date){
+        /*final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        final LocalDate dt = dtf.parseLocalDate(yourinput);
         DataApiRee dataApiRee = dataApiReeService.getPricesByDate(localDate);
-        return ResponseEntity.ok(dataApiRee.getData());
+        return null;*/
+        //return ResponseEntity.ok(dataApiRee.getData());
+        return null;
     }
+
+    //@GetMapping("/updateDate/{date}")
+
+    /*@GetMapping("/updateActualMonth")
+    public String updateActualMonth(){
+
+        LocalDate intitalDate = LocalDate.of(2024, 06, 01);
+        LocalDate nextDayDate = intitalDate.plusDays(1);
+
+        while(intitalDate.getDayOfMonth()!=30){
+            dataApiReeService.save(apiReeService.updatePrices(intitalDate, nextDayDate));
+            intitalDate = nextDayDate;
+            nextDayDate = intitalDate.plusDays(1);
+        }
+
+        return "Precios en rango de mes actualizados";
+    }*/
 
 
     @GetMapping("/updateActualPrice")
