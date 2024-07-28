@@ -3,14 +3,14 @@
 #    active: @activatedProperties@
 #Server config
 server:
-  port: ${PORT:443}
+  #port: ${PORT:8082}
   address: ${SERVER_ADDRESS}
-  ssl:
-    enabled: true
-    protocol: TLS
-    key-store-type: PKCS12
-    key-store: classpath:keystore/precionline-api-cert.p12
-    key-store-password: L9VrMWxwhVrDv4LxtFj2
+  #ssl:
+  #  enabled: true
+  #  protocol: TLS
+  #  key-store-type: PKCS12
+  #  key-store: classpath:keystore/precionline-api-cert.p12
+  #  key-store-password: L9VrMWxwhVrDv4LxtFj2
   servlet:
     context-path: /precionline/api/v1
 
