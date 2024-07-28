@@ -5,15 +5,17 @@ import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @RestController
 @RequestMapping("/prices")
+@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "true")
 public class PricesController {
 
     @Autowired
@@ -23,78 +25,73 @@ public class PricesController {
     DataApiReeService dataApiReeService;
 
     @GetMapping("/actual")
-    public ResponseEntity<?> getActualPrices()
-    {
+    public ResponseEntity<?> getActualPrices() {
+        try {
+            DataApiRee dataApiRee = dataApiReeService.getActualDayPrices();
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Access-Control-Allow-Origin", "*");
+            responseHeaders.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+            responseHeaders.set("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept");
+            responseHeaders.set("Access-Control-Allow-Credentials", "true");
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin","*");
-        responseHeaders.set("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,PATCH,OPTIONS");
-        responseHeaders.set("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
-        responseHeaders.set("Access-Control-Allow-Credentials","true");
-
-        DataApiRee dataApiRee =  dataApiReeService.getActualDayPrices();
-
-        return ResponseEntity.ok()
-                .headers(responseHeaders)
-                .body(dataApiRee.getData());
-
+            return ResponseEntity.ok()
+                    .headers(responseHeaders)
+                    .body(dataApiRee.getData());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener los precios: " + e.getMessage());
+        }
     }
 
     @GetMapping("/nextday")
-    public ResponseEntity<?> getNextDayPrices(){
-        DataApiRee dataApiRee = dataApiReeService.getNextDayPrices();
-        return ResponseEntity.ok(dataApiRee.getData());
+    public ResponseEntity<?> getNextDayPrices() {
+        try {
+            DataApiRee dataApiRee = dataApiReeService.getNextDayPrices();
+            return ResponseEntity.ok(dataApiRee.getData());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener los precios del siguiente día: " + e.getMessage());
+        }
     }
 
     @GetMapping("/query")
-    public ResponseEntity<?> getPricesByDate(@RequestParam String date){
-        /*final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
-        final LocalDate dt = dtf.parseLocalDate(yourinput);
-        DataApiRee dataApiRee = dataApiReeService.getPricesByDate(localDate);
-        return null;*/
-        //return ResponseEntity.ok(dataApiRee.getData());
-        return null;
-    }
-
-    //@GetMapping("/updateDate/{date}")
-
-    /*@GetMapping("/updateActualMonth")
-    public String updateActualMonth(){
-
-        LocalDate intitalDate = LocalDate.of(2024, 06, 01);
-        LocalDate nextDayDate = intitalDate.plusDays(1);
-
-        while(intitalDate.getDayOfMonth()!=30){
-            dataApiReeService.save(apiReeService.updatePrices(intitalDate, nextDayDate));
-            intitalDate = nextDayDate;
-            nextDayDate = intitalDate.plusDays(1);
+    public ResponseEntity<?> getPricesByDate(@RequestParam String date) {
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.parse(date, dtf);
+            DataApiRee dataApiRee = dataApiReeService.getPricesByDate(localDate);
+            return ResponseEntity.ok(dataApiRee.getData());
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Fecha inválida: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener los precios por fecha: " + e.getMessage());
         }
-
-        return "Precios en rango de mes actualizados";
-    }*/
-
+    }
 
     @GetMapping("/updateActualPrice")
-    public String updateActualPrice(){
-
-        LocalDate actualDate = LocalDate.now();
-        LocalDate nextDayDate = actualDate.plusDays(1);
-
-        dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
-
-        return "Precios día actual actualizados";
+    public ResponseEntity<String> updateActualPrice() {
+        try {
+            LocalDate actualDate = LocalDate.now();
+            LocalDate nextDayDate = actualDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            return ResponseEntity.ok("Precios día actual actualizados");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar los precios del día actual: " + e.getMessage());
+        }
     }
-
 
     @GetMapping("/updateNextDayPrices")
-    public String updateNextDayPrices(){
-
-        LocalDate actualDate = LocalDate.now().plusDays(1);
-        LocalDate nextDayDate = actualDate.plusDays(1);
-
-        dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
-
-        return "Precios día siguiente actualizados";
+    public ResponseEntity<String> updateNextDayPrices() {
+        try {
+            LocalDate actualDate = LocalDate.now().plusDays(1);
+            LocalDate nextDayDate = actualDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            return ResponseEntity.ok("Precios día siguiente actualizados");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar los precios del día siguiente: " + e.getMessage());
+        }
     }
-
 }
