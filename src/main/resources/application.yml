@@ -25,7 +25,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-  #security:
-  #  user:
-  #    name: precionline
-  #    password: pruebas1234!
+  security:
+    user:
+      name: precionline
+      password: pruebas1234!
