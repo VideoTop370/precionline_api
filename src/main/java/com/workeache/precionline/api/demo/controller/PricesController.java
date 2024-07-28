@@ -29,6 +29,8 @@ public class PricesController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin","*");
         responseHeaders.set("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,PATCH,OPTIONS");
+        responseHeaders.set("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+        responseHeaders.set("Access-Control-Allow-Credentials","true");
 
         DataApiRee dataApiRee =  dataApiReeService.getActualDayPrices();
 
