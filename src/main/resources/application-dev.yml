@@ -1,0 +1,28 @@
+#Server config
+server:
+  port: ${PORT:8082}
+  ssl:
+    enabled: true
+    protocol: TLS
+    key-store-type: PKCS12
+    key-store: classpath:keystore/precionline-api-cert.p12
+    key-store-password: L9VrMWxwhVrDv4LxtFj2
+  servlet:
+    context-path: /precionline/api/v1
+
+#MySql configuration
+spring:
+  application:
+    name: apirest
+  datasource:
+    url: jdbc:mysql://localhost:3306/precionline
+    username: preciouser
+    password: desarrollo
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    user:
+      name: precionline
+      password: pruebas1234!
+
