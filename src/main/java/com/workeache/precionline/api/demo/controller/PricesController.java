@@ -19,27 +19,27 @@ public class PricesController {
     @Autowired
     private DataApiReeService dataApiReeService;
 
-    @CrossOrigin(origins = "https://www.precionline.com")  // Permite CORS para este origen
+    @CrossOrigin(origins = "https://precionline.com")  // Permite CORS para este origen
     @GetMapping("/actual")
     public ResponseEntity<?> getActualPrices() {
         DataApiRee dataApiRee = dataApiReeService.getActualDayPrices();
         return ResponseEntity.ok(dataApiRee.getData());
     }
 
-    @CrossOrigin(origins = "https://www.precionline.com")  // Permite CORS para este origen
+    @CrossOrigin(origins = "https://precionline.com")  // Permite CORS para este origen
     @GetMapping("/nextday")
     public ResponseEntity<?> getNextDayPrices() {
         DataApiRee dataApiRee = dataApiReeService.getNextDayPrices();
         return ResponseEntity.ok(dataApiRee.getData());
     }
 
-    @CrossOrigin(origins = "https://www.precionline.com")  // Permite CORS para este origen
+    @CrossOrigin(origins = "https://precionline.com")  // Permite CORS para este origen
     @GetMapping("/query")
     public ResponseEntity<?> getPricesByDate(@RequestParam String date) {
         return ResponseEntity.ok("Not implemented yet");
     }
 
-    @CrossOrigin(origins = "https://www.precionline.com")  // Permite CORS para este origen
+    @CrossOrigin(origins = "https://precionline.com")  // Permite CORS para este origen
     @GetMapping("/updateActualPrice")
     public String updateActualPrice() {
         LocalDate actualDate = LocalDate.now();
@@ -48,7 +48,7 @@ public class PricesController {
         return "Precios del día actual actualizados";
     }
 
-    @CrossOrigin(origins = "https://www.precionline.com")  // Permite CORS para este origen
+    @CrossOrigin(origins = "https://precionline.com")  // Permite CORS para este origen
     @GetMapping("/updateNextDayPrices")
     public String updateNextDayPrices() {
         LocalDate actualDate = LocalDate.now().plusDays(1);
