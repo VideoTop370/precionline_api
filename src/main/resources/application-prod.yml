@@ -15,9 +15,9 @@ spring:
   application:
     name: apirest
   datasource:
-    url: jdbc:mysql://localhost:3306/precionline
-    username: preciouser
-    password: desarrollo
+    url: jdbc:mysql://roundhouse.proxy.rlwy.net:40878/railway
+    username: root
+    password: sEVRqTvDqxblVFQrkBksYplzhSfylrUB
   jpa:
     hibernate:
       ddl-auto: update
