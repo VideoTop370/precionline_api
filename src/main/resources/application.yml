@@ -3,7 +3,8 @@
 #    active: @activatedProperties@
 #Server config
 server:
-  port: ${PORT:8082}
+  port: ${PORT:443}
+  address: ${SERVER_ADDRESS}
   ssl:
     enabled: true
     protocol: TLS
