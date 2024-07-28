@@ -5,7 +5,6 @@ import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +15,18 @@ import java.time.LocalDate;
 public class PricesController {
 
     @Autowired
-    private ApiReeService apiReeService;
+    ApiReeService apiReeService;
 
     @Autowired
-    private DataApiReeService dataApiReeService;
+    DataApiReeService dataApiReeService;
 
+    @CrossOrigin(origins = "http://localhost:3000")  // Configuración específica para el controlador
     @GetMapping("/actual")
     public ResponseEntity<?> getActualPrices() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
-        responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-        responseHeaders.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-api-key");
+        responseHeaders.set("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+        responseHeaders.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         responseHeaders.set("Access-Control-Allow-Credentials", "true");
 
         DataApiRee dataApiRee = dataApiReeService.getActualDayPrices();
@@ -36,35 +36,35 @@ public class PricesController {
                 .body(dataApiRee.getData());
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")  // Configuración específica para el controlador
     @GetMapping("/nextday")
     public ResponseEntity<?> getNextDayPrices() {
         DataApiRee dataApiRee = dataApiReeService.getNextDayPrices();
         return ResponseEntity.ok(dataApiRee.getData());
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")  // Configuración específica para el controlador
     @GetMapping("/query")
     public ResponseEntity<?> getPricesByDate(@RequestParam String date) {
-        // Implementa la lógica para obtener precios por fecha
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Método no implementado");
+        // Código pendiente para manejar la fecha
+        return null;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")  // Configuración específica para el controlador
     @GetMapping("/updateActualPrice")
-    public ResponseEntity<String> updateActualPrice() {
+    public String updateActualPrice() {
         LocalDate actualDate = LocalDate.now();
         LocalDate nextDayDate = actualDate.plusDays(1);
-
         dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
-
-        return ResponseEntity.ok("Precios día actual actualizados");
+        return "Precios día actual actualizados";
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")  // Configuración específica para el controlador
     @GetMapping("/updateNextDayPrices")
-    public ResponseEntity<String> updateNextDayPrices() {
+    public String updateNextDayPrices() {
         LocalDate actualDate = LocalDate.now().plusDays(1);
         LocalDate nextDayDate = actualDate.plusDays(1);
-
         dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
-
-        return ResponseEntity.ok("Precios día siguiente actualizados");
+        return "Precios día siguiente actualizados";
     }
 }
