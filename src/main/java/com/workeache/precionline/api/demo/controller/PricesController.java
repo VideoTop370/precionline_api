@@ -82,6 +82,11 @@ public class PricesController {
             LocalDate actualDate = LocalDate.now().plusDays(1);
             LocalDate nextDayDate = actualDate.plusDays(1);
             dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+            actualDate = actualDate.plusDays(1);
+            nextDayDate = nextDayDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
             return ResponseEntity.ok("Precios día siguiente actualizados");
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
