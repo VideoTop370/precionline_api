@@ -160,6 +160,6 @@ public class PricesController {
         System.out.println("IP SERVIDOR: " + clientIp);
 
         // Comparar la IP del cliente con la IP del hosting permitida
-        return SERVER_IP.equals(clientIp);
+        return SERVER_IP.substring(0, 6).equals(clientIp.substring(0,6));
     }
 }
