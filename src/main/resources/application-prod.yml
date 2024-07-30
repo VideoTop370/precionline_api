@@ -19,5 +19,5 @@ spring:
 #Application Config
 precionline:
   server:
-    ip: 185.221.20.169
+    ip: 100.64.0.2
 
