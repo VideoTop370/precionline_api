@@ -22,7 +22,7 @@ public class SecurityConfig  {
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        http.cors(Customizer.withDefaults());
+        //http.cors(Customizer.withDefaults());
 
         return http.build();
     }

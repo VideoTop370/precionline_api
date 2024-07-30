@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-//@CrossOrigin(origins = "https://precionline.com") // Permite CORS para este origen
+@CrossOrigin() // Permite CORS para este origen
 @RestController
 @RequestMapping("/prices")
 public class PricesController {
