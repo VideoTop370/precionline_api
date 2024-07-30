@@ -22,3 +22,7 @@ spring:
     hibernate:
       ddl-auto: update
 
+#Application Config
+precionline:
+  server:
+    ip: 0:0:0:0:0:0:0:1
