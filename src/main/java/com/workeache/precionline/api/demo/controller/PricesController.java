@@ -15,10 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @CrossOrigin(origins = {
-        "https://precionline.com",
-        "https://www.precionline.com",
-        "http://precionline.com",
-        "http://www.precionline.com"
+        "${precionline.origins}"
 }) // Permite CORS para este origen
 @RestController
 @RequestMapping("/prices")
