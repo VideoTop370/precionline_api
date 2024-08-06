@@ -20,4 +20,5 @@ spring:
 precionline:
   server:
     ip: 100.64.0.2
+  origins: https://precionline.com,https://www.precionline.com,http://precionline.com,http://www.precionline.com
 
