@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 @Service
@@ -21,14 +22,14 @@ public class DataApiReeServiceImpl implements DataApiReeService{
 
     @Override
     public DataApiRee getActualDayPrices() {
-        LocalDate localDate = LocalDate.now(ZoneOffset.UTC);
+        LocalDate localDate = LocalDate.now(ZoneId.of("Europe/Madrid"));
 
         return dataApiReeRepository.findByDateFile(localDate);
     }
 
     @Override
     public DataApiRee getNextDayPrices() {
-        LocalDate localDate = LocalDate.now(ZoneOffset.UTC).plusDays(1);
+        LocalDate localDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
         return dataApiReeRepository.findByDateFile(localDate);
     }
 
