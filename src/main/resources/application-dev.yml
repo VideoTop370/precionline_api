@@ -26,3 +26,4 @@ spring:
 precionline:
   server:
     ip: 0:0:0:0:0:0:0:1
+  origins: http://localhost
