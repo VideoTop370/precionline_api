@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -91,7 +92,7 @@ public class PricesController {
         }
 
         try {
-            LocalDate actualDate = LocalDate.now();
+            LocalDate actualDate = LocalDate.now(ZoneOffset.UTC);
             LocalDate nextDayDate = actualDate.plusDays(1);
             dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
             return ResponseEntity.ok("Precios día actual actualizados");
@@ -109,7 +110,7 @@ public class PricesController {
         }
 
         try {
-            LocalDate actualDate = LocalDate.now().plusDays(1);
+            LocalDate actualDate = LocalDate.now(ZoneOffset.UTC).plusDays(1);
             LocalDate nextDayDate = actualDate.plusDays(1);
             dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
 
