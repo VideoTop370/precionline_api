@@ -1,9 +1,12 @@
 package com.workeache.precionline.api.demo.controller;
 
+import com.workeache.precionline.api.demo.batch.ScheluderConfiguration;
 import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
 import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,8 @@ public class PricesController {
 
     @Value("${precionline.server.ip}")
     private String SERVER_IP;
+
+    private final Logger logger = LoggerFactory.getLogger(PricesController.class);
 
 
     @GetMapping("/actual")
@@ -126,7 +131,8 @@ public class PricesController {
         }
     }
 
-    @GetMapping("/updateAllMonth")
+    //19-08-2024 -> Se quita este método para evitar problemas de seguridad y llenen la bbdd
+    /*@GetMapping("/updateAllMonth")
     public ResponseEntity<?> updateActualMonth(@RequestParam int month, @RequestParam int year, HttpServletRequest request) {
         if (!isRequestFromHost(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -147,7 +153,7 @@ public class PricesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar los precios de todo el mes: " + e.getMessage());
         }
-    }
+    }*/
 
     private boolean isRequestFromHost(HttpServletRequest request) {
 
@@ -156,7 +162,8 @@ public class PricesController {
         // Obtener la IP del cliente
         String clientIp = request.getRemoteAddr();
 
-        System.out.println("IP SERVIDOR: " + clientIp);
+        //System.out.println("IP SERVIDOR: " + clientIp);
+        logger.debug("IP SERVIDOR: " + clientIp);
 
         // Comparar la IP del cliente con la IP del hosting permitida
         return SERVER_IP.substring(0, 6).equals(clientIp.substring(0,6));
