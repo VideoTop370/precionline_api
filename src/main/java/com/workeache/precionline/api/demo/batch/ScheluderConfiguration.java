@@ -5,6 +5,7 @@ import com.workeache.precionline.api.demo.services.DataApiReeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -27,16 +28,20 @@ public class ScheluderConfiguration {
     @Autowired
     private DataApiReeService dataApiReeService;
 
-    @Scheduled(cron = "0 54 13 * * *")
+    @Scheduled(cron = "${precionline.cron}")
     public void launchJob() throws Exception {
 
-        logger.debug("Start price update " + LocalDateTime.now());
+        logger.info("Start price update " + LocalDateTime.now());
 
-        LocalDate actualDate = LocalDate.now();
+        LocalDate actualDate = LocalDate.now().plusDays(1);
         LocalDate nextDayDate = actualDate.plusDays(1);
         dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
 
-        logger.debug("End price update " + LocalDateTime.now());
+        actualDate = actualDate.plusDays(1);
+        nextDayDate = nextDayDate.plusDays(1);
+        dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+        logger.info("End price update " + LocalDateTime.now());
 
     }
 
