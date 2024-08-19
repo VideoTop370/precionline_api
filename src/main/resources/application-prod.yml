@@ -9,7 +9,8 @@ spring:
   application:
     name: apirest
   datasource:
-    url: jdbc:mysql://roundhouse.proxy.rlwy.net:40878/railway
+    #url: jdbc:mysql://roundhouse.proxy.rlwy.net:40878/railway
+    url: jdbc:mysql://mysql.railway.internal/railway
     username: root
     password: sEVRqTvDqxblVFQrkBksYplzhSfylrUB
   jpa:
