@@ -1,0 +1,41 @@
+#Server config
+server:
+  port: ${PORT:8082}
+  #ssl:
+  #  enabled: true
+  #  protocol: TLS
+  #  key-store-type: PKCS12
+  #  key-store: classpath:keystore/precionline-api-cert.p12
+  #  key-store-password: L9VrMWxwhVrDv4LxtFj2
+  servlet:
+    context-path: /precionline/api/v1
+
+#MySql configuration
+spring:
+  application:
+    name: apirest
+  datasource:
+    url: jdbc:mysql://mysql.railway.internal/railway
+    username: root
+    password: LnLukQMQgembwZdlQnrTWxHrwKUSTaUy
+  jpa:
+    hibernate:
+      ddl-auto: update
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+      table-prefix=spring_batch: BATCH_
+
+#Application Config
+#TODO Sacar Token a variable de entorno
+precionline:
+  server:
+    ip: 0:0:0:0:0:0:0:1
+  origins: http://localhost
+  cron: 0 43 10 * * *
+  ree:
+    token: 608773a53bb93c375e5e5a1ea658f684df8b6777cec2c2d2c8e2602fbbabf4a0
+    indicator:
+      1001: https://api.esios.ree.es/indicators/1001
