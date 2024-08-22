@@ -47,6 +47,7 @@ public class DataApiReeServiceImpl implements DataApiReeService{
             //Si ya existe lo actualizo
             DataApiRee dataApiReeTemp = dataApiReeRepository.findByDateFile(dataApiRee.getDateFile());
             dataApiReeTemp.setData(dataApiRee.getData());
+            dataApiReeTemp.setLastModifiedAuditDate(null);
             dataApiReeRepository.save(dataApiReeTemp);
         }
     }
