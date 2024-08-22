@@ -1,9 +1,11 @@
 package com.workeache.precionline.api.demo.controller;
 
-import com.workeache.precionline.api.demo.batch.ScheluderConfiguration;
+
 import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
 import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
+import com.workeache.precionline.api.demo.utils.notifications.GotifyClientService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import static com.workeache.precionline.api.demo.utils.notifications.Constant.*;
+
 
 @CrossOrigin(origins = {
         "${precionline.origins}"
@@ -31,6 +37,9 @@ public class PricesController {
 
     @Autowired
     private DataApiReeService dataApiReeService;
+
+    @Autowired
+    private GotifyClientService gotifyClientService;
 
     @Value("${precionline.server.ip}")
     private String SERVER_IP;
@@ -91,7 +100,7 @@ public class PricesController {
     }
 
     @GetMapping("/updateActualPrice")
-    public ResponseEntity<?> updateActualPrice(HttpServletRequest request) {
+    public ResponseEntity<?> updateActualPrice(HttpServletRequest request) throws IOException, InterruptedException {
         if (!isRequestFromHost(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Acceso denegado.");
@@ -101,15 +110,21 @@ public class PricesController {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid"));
             LocalDate nextDayDate = actualDate.plusDays(1);
             dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+            gotifyClientService.sendMessage(A001_SUCCESS);
+
             return ResponseEntity.ok("Precios día actual actualizados");
         } catch (Exception e) {
+            logger.debug(e.getMessage());
+            gotifyClientService.sendMessage(A001_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar los precios del día actual: " + e.getMessage());
+
         }
     }
 
     @GetMapping("/updateNextDayPrices")
-    public ResponseEntity<?> updateNextDayPrices(HttpServletRequest request) {
+    public ResponseEntity<?> updateNextDayPrices(HttpServletRequest request) throws IOException, InterruptedException {
         if (!isRequestFromHost(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Acceso denegado.");
@@ -124,8 +139,12 @@ public class PricesController {
             nextDayDate = nextDayDate.plusDays(1);
             dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
 
+            gotifyClientService.sendMessage(A002_SUCCESS);
+
             return ResponseEntity.ok("Precios día siguiente actualizados");
         } catch (Exception e) {
+            logger.debug(e.getMessage());
+            gotifyClientService.sendMessage(A002_ERROR);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar los precios del día actual: " + e.getMessage());
         }
