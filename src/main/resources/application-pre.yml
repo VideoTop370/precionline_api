@@ -32,9 +32,9 @@ spring:
 #TODO Sacar Token a variable de entorno
 precionline:
   server:
-    ip: 0:0:0:0:0:0:0:1
-  origins: http://localhost
-  cron: 0 43 10 * * *
+    ip: 0:0:0:0:0:0:0:1 #Deprecated Issue#13
+  origins: \*
+  cron: 0 30 18 * * *
   ree:
     token: 608773a53bb93c375e5e5a1ea658f684df8b6777cec2c2d2c8e2602fbbabf4a0
     indicator:
