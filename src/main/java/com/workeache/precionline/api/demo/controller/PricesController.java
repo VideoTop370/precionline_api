@@ -155,6 +155,8 @@ public class PricesController {
         }
     }*/
 
+    //Issue#13 deprecado
+    @Deprecated
     private boolean isRequestFromHost(HttpServletRequest request) {
 
         // Obtener la IP del cliente
@@ -163,7 +165,9 @@ public class PricesController {
         //System.out.println("IP SERVIDOR: " + clientIp);
         logger.debug("IP REQUEST: " + clientIp);
 
+        //22-08-2024 -> Issue#13. Quitar restricciones por ip para permitir aplicación móvil
         // Comparar la IP del cliente con la IP del hosting permitida
-        return SERVER_IP.substring(0, 6).equals(clientIp.substring(0,6));
+        //return SERVER_IP.substring(0, 6).equals(clientIp.substring(0,6));
+        return true;
     }
 }

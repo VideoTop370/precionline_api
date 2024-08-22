@@ -27,8 +27,8 @@ spring:
 #TODO Sacar Token a variable de entorno
 precionline:
   server:
-    ip: 100.64.0.2
-  origins: https://precionline.com,https://www.precionline.com,http://precionline.com,http://www.precionline.com
+    ip: 100.64.0.2 #Deprecated Issue#13
+  origins: \*
   cron: 0 30 18 * * *
   ree:
     token: 608773a53bb93c375e5e5a1ea658f684df8b6777cec2c2d2c8e2602fbbabf4a0
