@@ -37,7 +37,7 @@ public class GotifyClientService {
                 .build();
 
         final var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
+        //System.out.println(response.body());
 
         return response.statusCode() >= 200 && response.statusCode() < 400;
     }

@@ -43,6 +43,9 @@ precionline:
     gotify:
       url: https://gotify-production.up.railway.app
       token: ARb241n8JRkP3y2
+  rate:
+    limit: 100
+    durationinms: 60000
 
 logging:
   level:

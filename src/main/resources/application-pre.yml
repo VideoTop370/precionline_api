@@ -39,3 +39,10 @@ precionline:
     token: 608773a53bb93c375e5e5a1ea658f684df8b6777cec2c2d2c8e2602fbbabf4a0
     indicator:
       1001: https://api.esios.ree.es/indicators/1001
+  notifications:
+    gotify:
+      url: https://gotify-production.up.railway.app
+      token: ARb241n8JRkP3y2
+  rate:
+    limit: 200
+    durationinms: 60000
