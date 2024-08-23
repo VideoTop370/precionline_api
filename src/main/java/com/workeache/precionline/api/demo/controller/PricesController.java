@@ -4,6 +4,7 @@ package com.workeache.precionline.api.demo.controller;
 import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
 import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
+import com.workeache.precionline.api.demo.utils.annotations.WithRateLimitProtection;
 import com.workeache.precionline.api.demo.utils.notifications.GotifyClientService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class PricesController {
 
     private final Logger logger = LoggerFactory.getLogger(PricesController.class);
 
-
+    @WithRateLimitProtection
     @GetMapping("/actual")
     public ResponseEntity<?> getActualPrices(HttpServletRequest request) {
         if (!isRequestFromHost(request)) {
@@ -63,6 +64,7 @@ public class PricesController {
         }
     }
 
+    @WithRateLimitProtection
     @GetMapping("/nextday")
     public ResponseEntity<?> getNextDayPrices(HttpServletRequest request) {
         if (!isRequestFromHost(request)) {
@@ -79,6 +81,7 @@ public class PricesController {
         }
     }
 
+    @WithRateLimitProtection
     @GetMapping("/query")
     public ResponseEntity<?> getPricesByDate(@RequestParam String date, HttpServletRequest request) {
         if (!isRequestFromHost(request)) {
