@@ -42,18 +42,12 @@ public class PricesController {
     @Autowired
     private GotifyClientService gotifyClientService;
 
-    @Value("${precionline.server.ip}")
-    private String SERVER_IP;
 
     private final Logger logger = LoggerFactory.getLogger(PricesController.class);
 
     @WithRateLimitProtection
     @GetMapping("/actual")
     public ResponseEntity<?> getActualPrices(HttpServletRequest request) {
-        if (!isRequestFromHost(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Acceso denegado.");
-        }
 
         try {
             DataApiRee dataApiRee = dataApiReeService.getActualDayPrices();
@@ -67,10 +61,6 @@ public class PricesController {
     @WithRateLimitProtection
     @GetMapping("/nextday")
     public ResponseEntity<?> getNextDayPrices(HttpServletRequest request) {
-        if (!isRequestFromHost(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Acceso denegado.");
-        }
 
         try {
             DataApiRee dataApiRee = dataApiReeService.getNextDayPrices();
@@ -84,10 +74,6 @@ public class PricesController {
     @WithRateLimitProtection
     @GetMapping("/query")
     public ResponseEntity<?> getPricesByDate(@RequestParam String date, HttpServletRequest request) {
-        if (!isRequestFromHost(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Acceso denegado.");
-        }
 
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -104,10 +90,6 @@ public class PricesController {
 
     @GetMapping("/updateActualPrice")
     public ResponseEntity<?> updateActualPrice(HttpServletRequest request) throws IOException, InterruptedException {
-        if (!isRequestFromHost(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Acceso denegado.");
-        }
 
         try {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid"));
@@ -128,10 +110,6 @@ public class PricesController {
 
     @GetMapping("/updateNextDayPrices")
     public ResponseEntity<?> updateNextDayPrices(HttpServletRequest request) throws IOException, InterruptedException {
-        if (!isRequestFromHost(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Acceso denegado.");
-        }
 
         try {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
@@ -177,19 +155,5 @@ public class PricesController {
         }
     }*/
 
-    //Issue#13 deprecado
-    @Deprecated
-    private boolean isRequestFromHost(HttpServletRequest request) {
 
-        // Obtener la IP del cliente
-        String clientIp = request.getRemoteAddr();
-
-        //System.out.println("IP SERVIDOR: " + clientIp);
-        logger.debug("IP REQUEST: " + clientIp);
-
-        //22-08-2024 -> Issue#13. Quitar restricciones por ip para permitir aplicación móvil
-        // Comparar la IP del cliente con la IP del hosting permitida
-        //return SERVER_IP.substring(0, 6).equals(clientIp.substring(0,6));
-        return true;
-    }
 }
