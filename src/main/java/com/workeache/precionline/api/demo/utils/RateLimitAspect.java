@@ -1,9 +1,12 @@
 package com.workeache.precionline.api.demo.utils;
 
 import com.workeache.precionline.api.demo.exceptions.RateLimitException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,6 +27,9 @@ public class RateLimitAspect {
     @Value("${precionline.rate.durationinms}")
     private long rateDuration;
 
+    @Value("${precionline.server.ip}")
+    private String serverIp;
+
     /**
      * Executed by each call of a method annotated with {@link WithRateLimitProtection} which should be an HTTP endpoint.
      * Counts calls per remote address. Calls older than {@link #rateDuration} milliseconds will be forgotten. If there have
@@ -33,15 +39,21 @@ public class RateLimitAspect {
      */
     @Before("@annotation(com.workeache.precionline.api.demo.utils.annotations.WithRateLimitProtection)")
     public void rateLimit() {
+
         final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         final String key = requestAttributes.getRequest().getRemoteAddr();
-        final long currentTime = System.currentTimeMillis();
-        requestCounts.putIfAbsent(key, new ArrayList<>());
-        requestCounts.get(key).add(currentTime);
-        cleanUpRequestCounts(currentTime);
-        if (requestCounts.get(key).size() > rateLimit) {
-            throw new RateLimitException(String.format(ERROR_MESSAGE, requestAttributes.getRequest().getRequestURI(), key, rateDuration));
+
+        //Si la llamada es desde el servidor Web no se realiza validación
+        if (!isRequestFromWebServer(key)){
+            final long currentTime = System.currentTimeMillis();
+            requestCounts.putIfAbsent(key, new ArrayList<>());
+            requestCounts.get(key).add(currentTime);
+            cleanUpRequestCounts(currentTime);
+            if (requestCounts.get(key).size() > rateLimit) {
+                throw new RateLimitException(String.format(ERROR_MESSAGE, requestAttributes.getRequest().getRequestURI(), key, rateDuration));
+            }
         }
+
     }
 
     private void cleanUpRequestCounts(final long currentTime) {
@@ -52,5 +64,10 @@ public class RateLimitAspect {
 
     private boolean timeIsTooOld(final long currentTime, final long timeToCheck) {
         return currentTime - timeToCheck > rateDuration;
+    }
+
+    private boolean isRequestFromWebServer(String clientIp) {
+
+        return serverIp.substring(0, 6).equals(clientIp.substring(0,6));
     }
 }
