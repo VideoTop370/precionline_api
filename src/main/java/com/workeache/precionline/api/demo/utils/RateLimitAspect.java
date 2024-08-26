@@ -53,11 +53,7 @@ public class RateLimitAspect {
     public void rateLimit() {
 
         final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        final String key = requestAttributes.getRequest().getRemoteAddr();
-
-        logger.info("IP_A: " + requestAttributes.getRequest().getHeader("X-Real-IP"));
-        logger.info("IP_B: " + requestAttributes.getRequest().getHeader("X-Forwarded-For"));
-
+        final String key = requestAttributes.getRequest().getHeader("X-Real-IP");
 
         //Si la llamada es desde el servidor Web no se realiza validación
         if (!isRequestFromWebServer(key)){
@@ -84,29 +80,7 @@ public class RateLimitAspect {
 
     private boolean isRequestFromWebServer(String clientIp) {
 
-        URL whatismyip = null;
-        try {
-            whatismyip = new URL("http://checkip.amazonaws.com");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new InputStreamReader(
-                    whatismyip.openStream()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        String ip = null; //you get the IP as a String
-        try {
-            ip = in.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        logger.info(String.format("Ip origen: %s - Filtro Ip: %s - IP AWS: %s", clientIp, serverIp, ip));
+        logger.info(String.format("Ip origen: %s", clientIp));
         return serverIp.substring(0, 6).equals(clientIp.substring(0,6));
     }
 }
