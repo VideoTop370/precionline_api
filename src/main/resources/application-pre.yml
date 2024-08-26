@@ -1,12 +1,6 @@
 #Server config
 server:
-  port: ${PORT:8082}
-  #ssl:
-  #  enabled: true
-  #  protocol: TLS
-  #  key-store-type: PKCS12
-  #  key-store: classpath:keystore/precionline-api-cert.p12
-  #  key-store-password: L9VrMWxwhVrDv4LxtFj2
+  address: ${SERVER_ADDRESS}
   servlet:
     context-path: /precionline/api/v1
 
@@ -32,7 +26,7 @@ spring:
 #TODO Sacar Token a variable de entorno
 precionline:
   server:
-    ip: 0:0:0:0:0:0:0:1
+    ip: 100.64.0.2
   origins: \*
   cron: 0 30 18 * * *
   ree:
@@ -44,5 +38,5 @@ precionline:
       url: https://gotify-production.up.railway.app
       token: ARb241n8JRkP3y2
   rate:
-    limit: 200
+    limit: 100
     durationinms: 60000
