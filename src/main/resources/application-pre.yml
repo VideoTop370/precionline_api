@@ -27,7 +27,7 @@ spring:
 precionline:
   server:
     ip: 100.64.0.2
-  origins: \*
+  origins: "*"
   cron: 0 30 18 * * *
   ree:
     token: 608773a53bb93c375e5e5a1ea658f684df8b6777cec2c2d2c8e2602fbbabf4a0
