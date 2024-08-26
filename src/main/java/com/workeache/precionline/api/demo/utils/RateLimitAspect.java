@@ -75,7 +75,7 @@ public class RateLimitAspect {
 
     private boolean isRequestFromWebServer(String clientIp) {
 
-        logger.debug("Ip origen: %s - Filro Ip: %s", clientIp, serverIp);
+        logger.info(String.format("Ip origen: %s - Filtro Ip: %s", clientIp, serverIp));
         return serverIp.substring(0, 6).equals(clientIp.substring(0,6));
     }
 }

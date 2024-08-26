@@ -49,4 +49,4 @@ precionline:
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
