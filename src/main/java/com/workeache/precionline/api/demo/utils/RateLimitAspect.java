@@ -1,9 +1,12 @@
 package com.workeache.precionline.api.demo.utils;
 
+import com.workeache.precionline.api.demo.controller.PricesController;
 import com.workeache.precionline.api.demo.exceptions.RateLimitException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class RateLimitAspect {
     public static final String ERROR_MESSAGE = "To many request at endpoint %s from IP %s! Please try again after %d milliseconds!";
+
+    private final Logger logger = LoggerFactory.getLogger(PricesController.class);
+
+
     private final ConcurrentHashMap<String, List<Long>> requestCounts = new ConcurrentHashMap<>();
 
     @Value("${precionline.rate.limit}")
@@ -68,6 +75,7 @@ public class RateLimitAspect {
 
     private boolean isRequestFromWebServer(String clientIp) {
 
+        logger.debug("Ip origen: %s - Filro Ip: %s", clientIp, serverIp);
         return serverIp.substring(0, 6).equals(clientIp.substring(0,6));
     }
 }
