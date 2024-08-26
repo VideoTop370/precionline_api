@@ -10,11 +10,6 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
 public class PrecionlineApi {
 
-	@Bean
-	public RestTemplate getresttemplate() {
-		return new RestTemplate();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(PrecionlineApi.class, args);
 	}

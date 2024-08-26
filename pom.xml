@@ -80,6 +80,7 @@
 			<scope>test</scope>
 		</dependency>
 
+
 	</dependencies>
 
 	<build>
@@ -117,6 +118,26 @@
                 </resources>
             </build>-->
 		</profile>
+
+		<profile>
+			<!-- Production mode is activated using -Pproduction -->
+			<id>pre-production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<executable>true</executable>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<activatedProperties>pre</activatedProperties>
+			</properties>
+		</profile>
+
 
 		<profile>
 			<!-- Production mode is activated using -Pproduction -->
