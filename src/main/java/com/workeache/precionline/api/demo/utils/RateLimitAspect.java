@@ -14,6 +14,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,6 +55,7 @@ public class RateLimitAspect {
         final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         final String key = requestAttributes.getRequest().getRemoteAddr();
 
+
         //Si la llamada es desde el servidor Web no se realiza validación
         if (!isRequestFromWebServer(key)){
             final long currentTime = System.currentTimeMillis();
@@ -75,7 +81,29 @@ public class RateLimitAspect {
 
     private boolean isRequestFromWebServer(String clientIp) {
 
-        logger.info(String.format("Ip origen: %s - Filtro Ip: %s", clientIp, serverIp));
+        URL whatismyip = null;
+        try {
+            whatismyip = new URL("http://checkip.amazonaws.com");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String ip = null; //you get the IP as a String
+        try {
+            ip = in.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        logger.info(String.format("Ip origen: %s - Filtro Ip: %s - IP AWS: %s", clientIp, serverIp, ip));
         return serverIp.substring(0, 6).equals(clientIp.substring(0,6));
     }
 }
