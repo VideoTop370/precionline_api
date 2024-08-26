@@ -55,6 +55,9 @@ public class RateLimitAspect {
         final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         final String key = requestAttributes.getRequest().getRemoteAddr();
 
+        logger.info("IP_A: " + requestAttributes.getRequest().getHeader("X-Real-IP"));
+        logger.info("IP_B: " + requestAttributes.getRequest().getHeader("X-Forwarded-For"));
+
 
         //Si la llamada es desde el servidor Web no se realiza validación
         if (!isRequestFromWebServer(key)){
