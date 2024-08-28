@@ -1,6 +1,10 @@
 package com.workeache.precionline.api.demo.services;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.workeache.precionline.api.demo.exceptions.DataNotUpdateException;
 import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +31,7 @@ public class ApiReeServiceImpl implements ApiReeService{
     private String REE_TOKEN;
 
     @Override
-    public DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo) {
+    public DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo) throws DataNotUpdateException {
 
         DataApiRee dataApiRee = new DataApiRee();
 
@@ -41,6 +45,14 @@ public class ApiReeServiceImpl implements ApiReeService{
                         HttpMethod.GET,
                         reeObjectHttpEntity,
                         String.class);
+
+        JsonObject jsonObject = new Gson().fromJson(response.getBody(), JsonObject.class);
+
+
+
+        if (jsonObject.get("indicator").getAsJsonObject().get("values_updated_at").isJsonNull()){
+            throw new DataNotUpdateException("Datos de precios no disponibles en este momento.");
+        }
 
         dataApiRee.setData(response.getBody());
         dataApiRee.setDateFile(dateFrom);

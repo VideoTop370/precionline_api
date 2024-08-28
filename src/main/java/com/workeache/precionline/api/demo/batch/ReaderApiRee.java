@@ -31,8 +31,6 @@ public class ReaderApiRee implements ItemReader<List<DataApiRee>> {
         nextDayDate = nextDayDate.plusDays(1);
         //dataApiReeList.add(apiReeService.updatePrices(actualDate, nextDayDate));
 
-        System.out.println("SALGO DEL READ");
-
         return dataApiReeList;
     }
 }

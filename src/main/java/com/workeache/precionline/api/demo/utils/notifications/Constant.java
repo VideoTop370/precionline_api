@@ -8,4 +8,6 @@ public class Constant {
     public static final Message A001_ERROR = new Message("Error Act. A001","Error al actualizar los precios del día actual desde endpoint",1);
     public static final Message A002_ERROR = new Message("Error Act. A002","Error al actualizar los precios del día actual desde endpoint",1);
     public static final Message A003_ERROR = new Message("Error Act. A003","Error al actualizar los precios del día actual automáticamente",1);
+    public static final Message A004_ERROR = new Message("Error Act. A004","Error al actualizar los precios del día actual automáticamente. Datos de precios" +
+            " no disponles en este momento",1);
 }
