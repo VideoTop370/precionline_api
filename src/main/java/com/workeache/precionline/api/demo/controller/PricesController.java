@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +111,30 @@ public class PricesController {
 
     @GetMapping("/updateNextDayPrices")
     public ResponseEntity<?> updateNextDayPrices(HttpServletRequest request) throws IOException, InterruptedException {
+
+        try {
+            LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
+            LocalDate nextDayDate = actualDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+            actualDate = actualDate.plusDays(1);
+            nextDayDate = nextDayDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+            gotifyClientService.sendMessage(A002_SUCCESS);
+
+            return ResponseEntity.ok("Precios día siguiente actualizados");
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+            gotifyClientService.sendMessage(A002_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar los precios del día actual: " + e.getMessage());
+        }
+    }
+
+    @Profile("dev")
+    @GetMapping("/updateNextDayPricesTest")
+    public ResponseEntity<?> updateNextDayPricesTest(HttpServletRequest request) throws IOException, InterruptedException {
 
         try {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
