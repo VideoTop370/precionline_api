@@ -1,6 +1,10 @@
 package com.workeache.precionline.api.demo.utils.notifications;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workeache.precionline.api.demo.batch.ScheluderConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +16,8 @@ import java.net.http.HttpResponse;
 
 @Service
 public class GotifyClientService {
+
+    private final Logger logger = LoggerFactory.getLogger(GotifyClientService.class);
 
     @Value("${precionline.notifications.gotify.url}")
     private String GOTIFY_URL;
@@ -27,17 +33,24 @@ public class GotifyClientService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public boolean sendMessage(Message message) throws IOException, InterruptedException {
-        final var bodyData = objectMapper.writeValueAsString(message);
+    public boolean sendMessage(Message message) {
 
-        final var request = HttpRequest.newBuilder()
+        final String bodyData;
+        final HttpResponse<String> response;
+        try {
+            bodyData = objectMapper.writeValueAsString(message);
+
+            final var request = HttpRequest.newBuilder()
                 .uri(URI.create(String.format("%s/message?token=%s", GOTIFY_URL, TOKEN)))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(bodyData))
                 .build();
 
-        final var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        //System.out.println(response.body());
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            logger.error("Error en el envío de notificaciones.\n" + e.getMessage());
+            return false;
+        }
 
         return response.statusCode() >= 200 && response.statusCode() < 400;
     }

@@ -32,6 +32,9 @@ public class ScheluderConfiguration {
 
     private final Logger logger = LoggerFactory.getLogger(ScheluderConfiguration.class);
 
+    @Value("${precionline.retry.maxDelay}")
+    private String maxDelay;
+
     @Autowired
     private ApiReeService apiReeService;
 
@@ -44,7 +47,7 @@ public class ScheluderConfiguration {
 
     @Scheduled(cron = "${precionline.cron}")
     @Retryable(retryFor = DataNotUpdateException.class, maxAttemptsExpression  = "${precionline.retry.maxAttempts}", backoff = @Backoff(delayExpression  = "${precionline.retry.maxDelay}"))
-    public void launchJob() throws IOException, InterruptedException {
+    public void launchJob() throws DataNotUpdateException {
 
         try {
             logger.info("Inicio de actualización de precios " + LocalDateTime.now());
@@ -60,9 +63,9 @@ public class ScheluderConfiguration {
             logger.info("Fin de actualización de precios " + LocalDateTime.now());
             gotifyClientService.sendMessage(A003_SUCCESS);
         }catch (DataNotUpdateException dataNotUpdateException) {
-            logger.error("Datos de precios no disponibles. Se reintentará en ${precionline.retry.maxDelay} milisegundos" );
+            logger.error(String.format("Datos de precios no disponibles. Se reintentará en %s milisegundos",maxDelay));
             gotifyClientService.sendMessage(A004_ERROR);
-            throw new DataNotUpdateException("Pruebas");
+            throw new DataNotUpdateException(dataNotUpdateException.getMessage());
         }catch (Exception e){
             logger.error("Prices update scheduled failed " + LocalDateTime.now());
             gotifyClientService.sendMessage(A003_ERROR);
