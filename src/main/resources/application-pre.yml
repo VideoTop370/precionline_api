@@ -40,3 +40,6 @@ precionline:
   rate:
     limit: 100
     durationinms: 60000
+  retry:
+    maxAttempts: 10
+    maxDelay: 300000

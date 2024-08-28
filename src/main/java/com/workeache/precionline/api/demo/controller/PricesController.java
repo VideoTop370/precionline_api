@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,6 +90,7 @@ public class PricesController {
         }
     }
 
+    @WithRateLimitProtection
     @GetMapping("/updateActualPrice")
     public ResponseEntity<?> updateActualPrice(HttpServletRequest request) throws IOException, InterruptedException {
 
@@ -108,6 +111,7 @@ public class PricesController {
         }
     }
 
+    @WithRateLimitProtection
     @GetMapping("/updateNextDayPrices")
     public ResponseEntity<?> updateNextDayPrices(HttpServletRequest request) throws IOException, InterruptedException {
 
@@ -131,13 +135,36 @@ public class PricesController {
         }
     }
 
-    //19-08-2024 -> Se quita este método para evitar problemas de seguridad y llenen la bbdd
-    /*@GetMapping("/updateAllMonth")
-    public ResponseEntity<?> updateActualMonth(@RequestParam int month, @RequestParam int year, HttpServletRequest request) {
-        if (!isRequestFromHost(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Acceso denegado.");
+    @Profile("dev")
+    @GetMapping("/updateNextDayPricesTest")
+    public ResponseEntity<?> updateNextDayPricesTest(HttpServletRequest request) throws IOException, InterruptedException {
+
+        try {
+            LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
+            LocalDate nextDayDate = actualDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+            actualDate = actualDate.plusDays(1);
+            nextDayDate = nextDayDate.plusDays(1);
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+
+            gotifyClientService.sendMessage(A002_SUCCESS);
+
+            return ResponseEntity.ok("Precios día siguiente actualizados");
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+            gotifyClientService.sendMessage(A002_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar los precios del día actual: " + e.getMessage());
         }
+    }
+
+    //19-08-2024 -> Se quita este método para evitar problemas de seguridad y llenen la bbdd
+    //28-08-2024 -> Dejo solo para el entorno de desarrollo
+    @Profile("dev")
+    @GetMapping("/updateAllMonth")
+    public ResponseEntity<?> updateActualMonth(@RequestParam int month, @RequestParam int year, HttpServletRequest request) {
+
 
         try {
             LocalDate intitalDate = LocalDate.of(year, month, 1);
@@ -153,7 +180,7 @@ public class PricesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar los precios de todo el mes: " + e.getMessage());
         }
-    }*/
+    }
 
 
 }
