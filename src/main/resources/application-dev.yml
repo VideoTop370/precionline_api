@@ -44,7 +44,7 @@ precionline:
       url: https://gotify-production.up.railway.app
       token: ARb241n8JRkP3y2
   rate:
-    limit: 100
+    limit: 40
     durationinms: 60000
   retry:
     maxAttempts: 10
