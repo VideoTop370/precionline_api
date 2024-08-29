@@ -35,10 +35,10 @@ precionline:
       1001: https://api.esios.ree.es/indicators/1001
   notifications:
     gotify:
-      url: https://gotify-production.up.railway.app
+      url: https://gotify-fupw-pre-produccion.up.railway.app
       token: ARb241n8JRkP3y2
   rate:
-    limit: 100
+    limit: 40
     durationinms: 60000
   retry:
     maxAttempts: 10
