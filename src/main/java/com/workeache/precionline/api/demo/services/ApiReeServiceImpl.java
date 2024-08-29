@@ -51,6 +51,8 @@ public class ApiReeServiceImpl implements ApiReeService{
 
 
         if (jsonObject.get("indicator").getAsJsonObject().get("values_updated_at").isJsonNull()){
+            dataApiRee.setData(response.getBody());
+            dataApiRee.setDateFile(dateFrom);
             throw new DataNotUpdateException("Datos de precios no disponibles en este momento.");
         }
 
