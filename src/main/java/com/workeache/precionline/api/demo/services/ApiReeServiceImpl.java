@@ -31,7 +31,7 @@ public class ApiReeServiceImpl implements ApiReeService{
     private String REE_TOKEN;
 
     @Override
-    public DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo) throws DataNotUpdateException {
+    public DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo, boolean validate) throws DataNotUpdateException {
 
         DataApiRee dataApiRee = new DataApiRee();
 
@@ -46,14 +46,13 @@ public class ApiReeServiceImpl implements ApiReeService{
                         reeObjectHttpEntity,
                         String.class);
 
-        JsonObject jsonObject = new Gson().fromJson(response.getBody(), JsonObject.class);
+        if (validate) {
+            JsonObject jsonObject = new Gson().fromJson(response.getBody(), JsonObject.class);
 
 
-
-        if (jsonObject.get("indicator").getAsJsonObject().get("values_updated_at").isJsonNull()){
-            dataApiRee.setData(response.getBody());
-            dataApiRee.setDateFile(dateFrom);
-            throw new DataNotUpdateException("Datos de precios no disponibles en este momento.");
+            if (jsonObject.get("indicator").getAsJsonObject().get("values_updated_at").isJsonNull()) {
+                throw new DataNotUpdateException("Datos de precios no disponibles en este momento.");
+            }
         }
 
         dataApiRee.setData(response.getBody());
