@@ -6,5 +6,5 @@ import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
 import java.time.LocalDate;
 
 public interface ApiReeService {
-    DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo) throws DataNotUpdateException;
+    DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo, boolean validate) throws DataNotUpdateException;
 }

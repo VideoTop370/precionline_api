@@ -54,11 +54,11 @@ public class ScheluderConfiguration {
 
             LocalDate actualDate = LocalDate.now().plusDays(1);
             LocalDate nextDayDate = actualDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate,true));
 
             actualDate = actualDate.plusDays(1);
             nextDayDate = nextDayDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate, false));
 
             logger.info("Fin de actualización de precios " + LocalDateTime.now());
             gotifyClientService.sendMessage(A003_SUCCESS);

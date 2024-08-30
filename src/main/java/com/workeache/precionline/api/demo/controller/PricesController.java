@@ -97,7 +97,7 @@ public class PricesController {
         try {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid"));
             LocalDate nextDayDate = actualDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate, false));
 
             gotifyClientService.sendMessage(A001_SUCCESS);
 
@@ -118,11 +118,11 @@ public class PricesController {
         try {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
             LocalDate nextDayDate = actualDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate,false));
 
             actualDate = actualDate.plusDays(1);
             nextDayDate = nextDayDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate,false));
 
             gotifyClientService.sendMessage(A002_SUCCESS);
 
@@ -142,11 +142,11 @@ public class PricesController {
         try {
             LocalDate actualDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
             LocalDate nextDayDate = actualDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate,false));
 
             actualDate = actualDate.plusDays(1);
             nextDayDate = nextDayDate.plusDays(1);
-            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate));
+            dataApiReeService.save(apiReeService.updatePrices(actualDate, nextDayDate,false));
 
             gotifyClientService.sendMessage(A002_SUCCESS);
 
@@ -170,7 +170,7 @@ public class PricesController {
             LocalDate intitalDate = LocalDate.of(year, month, 1);
             LocalDate nextDayDate = intitalDate.plusDays(1);
             do {
-                dataApiReeService.save(apiReeService.updatePrices(intitalDate, nextDayDate));
+                dataApiReeService.save(apiReeService.updatePrices(intitalDate, nextDayDate, false));
                 intitalDate = nextDayDate;
                 nextDayDate = intitalDate.plusDays(1);
             } while (intitalDate.getMonth().getValue() == month);
