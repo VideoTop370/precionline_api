@@ -1,7 +1,7 @@
 package com.workeache.precionline.api.demo.controller;
 
 
-import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
+import com.workeache.precionline.api.demo.persistence.entities.DataApiReeEntity;
 import com.workeache.precionline.api.demo.services.ApiReeService;
 import com.workeache.precionline.api.demo.services.DataApiReeService;
 import com.workeache.precionline.api.demo.utils.annotations.WithRateLimitProtection;
@@ -11,8 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -52,8 +49,8 @@ public class PricesController {
     public ResponseEntity<?> getActualPrices(HttpServletRequest request) {
 
         try {
-            DataApiRee dataApiRee = dataApiReeService.getActualDayPrices();
-            return ResponseEntity.ok(dataApiRee.getData());
+            DataApiReeEntity dataApiReeEntity = dataApiReeService.getActualDayPrices();
+            return ResponseEntity.ok(dataApiReeEntity.getData());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al obtener los precios del día actual: " + e.getMessage());
@@ -65,8 +62,8 @@ public class PricesController {
     public ResponseEntity<?> getNextDayPrices(HttpServletRequest request) {
 
         try {
-            DataApiRee dataApiRee = dataApiReeService.getNextDayPrices();
-            return ResponseEntity.ok(dataApiRee.getData());
+            DataApiReeEntity dataApiReeEntity = dataApiReeService.getNextDayPrices();
+            return ResponseEntity.ok(dataApiReeEntity.getData());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al obtener los precios del siguiente día: " + e.getMessage());
@@ -80,8 +77,8 @@ public class PricesController {
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate localDate = LocalDate.parse(date, dtf);
-            DataApiRee dataApiRee = dataApiReeService.getPricesByDate(localDate);
-            return ResponseEntity.ok(dataApiRee.getData());
+            DataApiReeEntity dataApiReeEntity = dataApiReeService.getPricesByDate(localDate);
+            return ResponseEntity.ok(dataApiReeEntity.getData());
         } catch (DateTimeParseException e) {
             return ResponseEntity.badRequest().body("Fecha inválida: " + e.getMessage());
         } catch (Exception e) {
