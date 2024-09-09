@@ -1,14 +1,12 @@
 package com.workeache.precionline.api.demo.services;
 
-import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
+import com.workeache.precionline.api.demo.persistence.entities.DataApiReeEntity;
 import com.workeache.precionline.api.demo.persistence.repositories.DataApiReeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 @Service
 public class DataApiReeServiceImpl implements DataApiReeService{
@@ -21,34 +19,34 @@ public class DataApiReeServiceImpl implements DataApiReeService{
     }
 
     @Override
-    public DataApiRee getActualDayPrices() {
+    public DataApiReeEntity getActualDayPrices() {
         LocalDate localDate = LocalDate.now(ZoneId.of("Europe/Madrid"));
 
         return dataApiReeRepository.findByDateFile(localDate);
     }
 
     @Override
-    public DataApiRee getNextDayPrices() {
+    public DataApiReeEntity getNextDayPrices() {
         LocalDate localDate = LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(1);
         return dataApiReeRepository.findByDateFile(localDate);
     }
 
     @Override
-    public DataApiRee getPricesByDate(LocalDate localDate) {
+    public DataApiReeEntity getPricesByDate(LocalDate localDate) {
         return dataApiReeRepository.findByDateFile(localDate);
     }
 
     @Override
-    public void save(DataApiRee dataApiRee) {
+    public void save(DataApiReeEntity dataApiReeEntity) {
 
-        if (!dataApiReeRepository.existsByDateFile(dataApiRee.getDateFile())) {
-            dataApiReeRepository.save(dataApiRee);
+        if (!dataApiReeRepository.existsByDateFile(dataApiReeEntity.getDateFile())) {
+            dataApiReeRepository.save(dataApiReeEntity);
         }else{
             //Si ya existe lo actualizo
-            DataApiRee dataApiReeTemp = dataApiReeRepository.findByDateFile(dataApiRee.getDateFile());
-            dataApiReeTemp.setData(dataApiRee.getData());
-            dataApiReeTemp.setLastModifiedAuditDate(null);
-            dataApiReeRepository.save(dataApiReeTemp);
+            DataApiReeEntity dataApiReeEntityTemp = dataApiReeRepository.findByDateFile(dataApiReeEntity.getDateFile());
+            dataApiReeEntityTemp.setData(dataApiReeEntity.getData());
+            dataApiReeEntityTemp.setLastModifiedAuditDate(null);
+            dataApiReeRepository.save(dataApiReeEntityTemp);
         }
     }
 }

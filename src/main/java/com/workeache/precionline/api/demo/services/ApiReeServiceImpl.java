@@ -3,9 +3,8 @@ package com.workeache.precionline.api.demo.services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.workeache.precionline.api.demo.exceptions.DataNotUpdateException;
-import com.workeache.precionline.api.demo.persistence.entities.DataApiRee;
+import com.workeache.precionline.api.demo.persistence.entities.DataApiReeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,9 +30,9 @@ public class ApiReeServiceImpl implements ApiReeService{
     private String REE_TOKEN;
 
     @Override
-    public DataApiRee updatePrices(LocalDate dateFrom, LocalDate dateTo, boolean validate) throws DataNotUpdateException {
+    public DataApiReeEntity updatePrices(LocalDate dateFrom, LocalDate dateTo, boolean validate) throws DataNotUpdateException {
 
-        DataApiRee dataApiRee = new DataApiRee();
+        DataApiReeEntity dataApiReeEntity = new DataApiReeEntity();
 
         HttpEntity<String> reeObjectHttpEntity = new HttpEntity<>("body",getHeaders());
 
@@ -55,10 +54,10 @@ public class ApiReeServiceImpl implements ApiReeService{
             }
         }
 
-        dataApiRee.setData(response.getBody());
-        dataApiRee.setDateFile(dateFrom);
+        dataApiReeEntity.setData(response.getBody());
+        dataApiReeEntity.setDateFile(dateFrom);
 
-        return dataApiRee;
+        return dataApiReeEntity;
 
     }
 

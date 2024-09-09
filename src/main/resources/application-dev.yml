@@ -15,6 +15,9 @@ spring:
   application:
     name: apirest
   datasource:
+    #url: jdbc:mysql://junction.proxy.rlwy.net:39680/railway
+    #username: root
+    #password: LnLukQMQgembwZdlQnrTWxHrwKUSTaUy
     url: jdbc:mysql://localhost:3306/precionline
     username: preciouser
     password: desarrollo
