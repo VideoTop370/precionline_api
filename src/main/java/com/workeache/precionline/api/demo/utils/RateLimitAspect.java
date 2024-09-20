@@ -53,7 +53,13 @@ public class RateLimitAspect {
     public void rateLimit() {
 
         final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        final String key = requestAttributes.getRequest().getHeader("X-Real-IP");
+        String key = requestAttributes.getRequest().getHeader("X-Real-IP");
+
+        //Bug#010
+        //Reparación rápida
+        if (key==null){
+            key = new String("78.78.78.78");
+        }
 
         //Si la llamada es desde el servidor Web no se realiza validación
         if (!isRequestFromWebServer(key)){
